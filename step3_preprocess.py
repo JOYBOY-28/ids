@@ -1,13 +1,15 @@
 import numpy as np
 import pandas as pd
 import joblib
+from pathlib import Path
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 
 from step2_extract import feature_list
 
-SCALER_PATH = "scaler.pkl"
+BASE_DIR = Path(__file__).resolve().parent
+SCALER_PATH = BASE_DIR / "scaler.pkl"
 
 CONTINUOUS_FEATURES  = ["payload_len", "ip_ttl", "delta_t"]
 PASSTHROUGH_FEATURES = ["flag_syn", "flag_ack", "flag_fin", "flag_rst", "flag_psh", "proto"]
@@ -64,8 +66,8 @@ def preprocess(feature_list: list[dict]) -> tuple[np.ndarray, np.ndarray, Standa
     X = df[ALL_FEATURES].to_numpy(dtype=np.float32)
     y = df["label"].to_numpy(dtype=np.int32)
 
-    np.save("X.npy", X)
-    np.save("y.npy", y)
+    np.save(BASE_DIR / "X.npy", X)
+    np.save(BASE_DIR / "y.npy", y)
     print(f"[preprocess] Saved X.npy {X.shape} and y.npy {y.shape}")
 
     return X, y, scaler

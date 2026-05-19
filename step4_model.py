@@ -2,6 +2,7 @@ import time
 import numpy as np
 import joblib
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
@@ -11,7 +12,8 @@ from step1_capture import packet_buffer
 from step2_extract import _extract_features
 from step3_preprocess import transform
 
-MODEL_PATH = "model.pkl"
+BASE_DIR = Path(__file__).resolve().parent
+MODEL_PATH = BASE_DIR / "model.pkl"
 
 _model: RandomForestClassifier | None = None
 
@@ -62,8 +64,8 @@ def live_monitor(interval: int = 5) -> None:
 # Training & evaluation
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
-    X = np.load("X.npy")
-    y = np.load("y.npy")
+    X = np.load(BASE_DIR / "X.npy")
+    y = np.load(BASE_DIR / "y.npy")
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, stratify=y, random_state=42
@@ -86,7 +88,7 @@ if __name__ == "__main__":
     )
     disp.ax_.set_title("IDS Confusion Matrix")
     plt.tight_layout()
-    plt.savefig("confusion_matrix.png", dpi=150)
+    plt.savefig(BASE_DIR / "confusion_matrix.png", dpi=150)
     plt.close()
     print("Confusion matrix saved to confusion_matrix.png")
 

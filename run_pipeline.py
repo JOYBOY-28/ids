@@ -1,6 +1,7 @@
 import time
 import threading
 import os
+from pathlib import Path
 
 import step1_capture
 import step2_extract
@@ -8,6 +9,7 @@ import step3_preprocess
 
 MIN_FEATURES     = 100  # minimum samples before preprocessing runs
 PREPROCESS_EVERY = 5    # seconds between each feature count check
+BASE_DIR = Path(__file__).resolve().parent
 
 _done = threading.Event()
 
@@ -46,9 +48,9 @@ def _preprocess_loop():
             print(f"[pipeline] X={X.shape}  y={y.shape}  "
                   f"normal={(y==0).sum()}  attack={(y==1).sum()}")
 
-            assets = ["X.npy", "y.npy", "scaler.pkl"]
+            assets = [BASE_DIR / "X.npy", BASE_DIR / "y.npy", BASE_DIR / "scaler.pkl"]
             if all(os.path.exists(a) for a in assets):
-                print(f"[pipeline] All assets saved: {assets}")
+                print(f"[pipeline] All assets saved: {[str(a) for a in assets]}")
                 print("[pipeline] Done. Terminating.")
                 _done.set()
                 return
